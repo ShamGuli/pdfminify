@@ -26,7 +26,7 @@ async function getBlogPosts(): Promise<Post[]> {
     );
 
     if (!res.ok) return [];
-    return (await res.json()) as BlogPost[];
+    return (await res.json()) as Post[];
   } catch {
     return [];
   }
