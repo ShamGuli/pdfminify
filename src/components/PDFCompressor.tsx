@@ -90,7 +90,10 @@ async function renderPdfToBlob(
 
   onProgress(90);
   const bytes = await outputPdf.save({ useObjectStreams: true });
-  return new Blob([bytes], { type: "application/pdf" });
+  // pdf-lib returns a Uint8Array; the Blob constructor accepts ArrayBuffer,
+  // ArrayBufferView or string. Cast to any to align with the runtime API
+  // without fighting TypeScript's widened ArrayBufferLike types.
+  return new Blob([bytes as any], { type: "application/pdf" });
 }
 
 async function compressPdfCanvas(
