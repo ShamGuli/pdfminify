@@ -31,12 +31,8 @@ type Post = {
 
 export default async function BlogIndexPage() {
   let posts: Post[] = [];
-  let errorMessage: string | null = null;
 
-  if (!supabase) {
-    // Supabase not configured — show empty state without crashing
-    errorMessage = "Blog is not configured yet.";
-  } else {
+  if (supabase) {
     try {
       const { data, error } = await supabase
         .from("posts")
@@ -44,13 +40,12 @@ export default async function BlogIndexPage() {
         .eq("published", true)
         .order("created_at", { ascending: false });
 
-      if (error) {
-        errorMessage = "Could not load posts from Supabase.";
-      } else {
+      if (!error) {
         posts = (data as Post[]) ?? [];
       }
+      // Əgər error varsa, user-ə qırmızı xəta göstərmirik — sadəcə \"No posts yet\" boş state-i görünəcək.
     } catch {
-      errorMessage = "Unexpected error while loading blog posts.";
+      // Ignore və boş state göstər.
     }
   }
 
@@ -77,10 +72,6 @@ export default async function BlogIndexPage() {
             workflows for modern websites and products.
           </p>
         </header>
-
-        {errorMessage && (
-          <p className="mb-6 text-sm text-red-600">{errorMessage}</p>
-        )}
 
         {/* Tag cloud */}
         {posts.length > 0 && (() => {

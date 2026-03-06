@@ -2,19 +2,24 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // /admin/login həmişə açıq qalsın
+  if (pathname === "/admin/login") {
+    return NextResponse.next();
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+  // Env yoxdursa — login-ə yönləndir (keçid vermə!)
   if (!url || !anonKey) {
-    return NextResponse.next();
+    const loginUrl = req.nextUrl.clone();
+    loginUrl.pathname = "/admin/login";
+    return NextResponse.redirect(loginUrl);
   }
 
-  // login route həmişə açıq qalsın
-  if (req.nextUrl.pathname === "/admin/login") {
-    return NextResponse.next();
-  }
-
-  let res = NextResponse.next();
+  const res = NextResponse.next();
 
   const supabase = createServerClient(url, anonKey, {
     cookies: {
@@ -22,28 +27,23 @@ export async function middleware(req: NextRequest) {
         return req.cookies.getAll();
       },
       setAll(cookiesToSet) {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            res.cookies.set(name, value, options),
-          );
-        } catch {
-          // ignore
-        }
+        cookiesToSet.forEach(({ name, value, options }) => {
+          res.cookies.set(name, value, options);
+        });
       },
     },
   });
 
+  // getUser() — getSession()-dən daha etibarlı (server-side token doğrulaması edir)
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
-
-  if (isAdminRoute && !session) {
-    const redirectUrl = req.nextUrl.clone();
-    redirectUrl.pathname = "/admin/login";
-    redirectUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
-    return NextResponse.redirect(redirectUrl);
+  if (!user) {
+    const loginUrl = req.nextUrl.clone();
+    loginUrl.pathname = "/admin/login";
+    loginUrl.searchParams.set("redirectTo", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   return res;
@@ -52,4 +52,3 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: ["/admin/:path*"],
 };
-
