@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Admin — PNG Minify",
+  title: "Admin — PDF Minify",
 };
 
 export default function AdminLayout({

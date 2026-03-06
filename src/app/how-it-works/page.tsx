@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "How PNG Minify Works — Browser-side PNG Compression",
+  title: "How PDF Minify Works — Browser-side PDF Compression",
   description:
-    "Understand how PNG Minify compresses images directly in your browser in three simple steps: upload, compress, download.",
+    "Understand how PDF Minify compresses documents directly in your browser in three simple steps: upload, compress, download.",
 };
 
 export default function HowItWorksPage() {
@@ -18,10 +18,10 @@ export default function HowItWorksPage() {
             How it works
           </p>
           <h1 className="text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            Compress PNGs in three simple steps
+            Compress PDFs in three simple steps
           </h1>
           <p className="max-w-2xl text-sm text-slate-600 sm:text-base">
-            PNG Minify runs entirely in your browser. Your images never leave
+            PDF Minify runs entirely in your browser. Your documents never leave
             your device — we simply transform them locally using modern
             compression techniques.
           </p>
@@ -33,9 +33,9 @@ export default function HowItWorksPage() {
               1. Upload
             </h2>
             <p className="text-xs text-slate-600 sm:text-sm">
-              Drag &amp; drop your PNG files into the upload area or click the
-              button to choose files from your computer. PNG Minify accepts PNG
-              only — other formats like JPG or WEBP are gently rejected.
+              Drag &amp; drop your PDF files into the upload area or click the
+              button to choose files from your computer. PDF Minify accepts PDF
+              documents — other formats are gently rejected.
             </p>
           </div>
           <div className="rounded-xl bg-white p-4 shadow-sm shadow-slate-100">
@@ -45,8 +45,8 @@ export default function HowItWorksPage() {
             <p className="text-xs text-slate-600 sm:text-sm">
               For each file we run browser-side compression using
               JavaScript-based algorithms. Use the quality slider to balance
-              file size and visual quality. All processing happens locally in
-              your browser tab.
+              file size and readability. All processing happens locally in your
+              browser tab.
             </p>
           </div>
           <div className="rounded-xl bg-white p-4 shadow-sm shadow-slate-100">
@@ -54,8 +54,8 @@ export default function HowItWorksPage() {
               3. Download
             </h2>
             <p className="text-xs text-slate-600 sm:text-sm">
-              Once compression is finished, download individual PNGs or
-              everything as a single ZIP. We never store or log your images —
+              Once compression is finished, download individual PDFs or
+              everything as a single ZIP. We never store or log your documents —
               after download, the data stays only with you.
             </p>
           </div>

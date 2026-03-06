@@ -27,7 +27,7 @@ export default function AdminHeader() {
             ADM
           </span>
           <span className="text-base font-semibold text-slate-900 sm:text-lg">
-            PNG Minify Admin
+            PDF Minify Admin
           </span>
         </Link>
 

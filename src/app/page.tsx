@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Compressor from "@/components/Compressor";
 import AdBanner from "@/components/AdBanner";
+import PDFCompressorWrapper from "@/components/PDFCompressorWrapper";
 
 type BlogPost = {
   slug: string;
@@ -59,48 +59,48 @@ export default async function Home() {
         </section>
 
         {/* HERO */}
-        <section className="mx-auto flex max-w-5xl flex-col gap-8 px-4 pt-10 sm:px-6 sm:pt-14 lg:pt-16">
-          <div className="max-w-2xl space-y-4">
+        <section className="mx-auto flex max-w-5xl flex-col gap-6 px-4 pt-8 sm:gap-8 sm:px-6 sm:pt-14 lg:pt-16">
+          <div className="max-w-2xl space-y-3 sm:space-y-4">
             <p className="inline-flex items-center rounded-full bg-primary/5 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/10">
-              Compress PNGs in your browser — no upload
+              Compress PDFs in your browser — no upload
             </p>
-            <h1 className="text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              Compress PNG Images Online —{" "}
+            <h1 className="text-balance text-2xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+              Compress PDF Files Online —{" "}
               <span className="text-primary">Free &amp; Instant</span>
             </h1>
             <p className="text-pretty text-sm leading-relaxed text-slate-600 sm:text-base">
-              Reduce PNG file size up to 80% without losing quality. No signup.
+              Reduce PDF file size up to 80% without losing quality. No signup.
               No upload to server. Everything happens securely in your browser.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3 text-xs sm:text-sm">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200">
+          <div className="flex flex-wrap gap-2 text-xs sm:gap-3 sm:text-sm">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200 sm:gap-2 sm:py-1">
               <span aria-hidden>🔒</span> 100% Private
             </span>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200 sm:gap-2 sm:py-1">
               <span aria-hidden>⚡</span> Instant
             </span>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200 sm:gap-2 sm:py-1">
               <span aria-hidden>✅</span> Free Forever
             </span>
           </div>
         </section>
 
         {/* COMPRESSOR */}
-        <section className="mx-auto mt-8 max-w-5xl px-4 pb-10 sm:px-6 sm:pb-14 lg:pb-16">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-            <Compressor />
+        <section className="mx-auto mt-6 max-w-5xl px-4 pb-10 sm:mt-8 sm:px-6 sm:pb-14 lg:pb-16">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-8">
+            <PDFCompressorWrapper />
 
             <div className="space-y-4 text-sm text-slate-600">
               <div className="rounded-xl bg-white p-4 shadow-sm shadow-slate-100">
                 <h2 className="mb-1 text-sm font-semibold text-slate-900">
-                  Why PNG Minify?
+                  Why PDF Minify?
                 </h2>
                 <ul className="space-y-1.5">
-                  <li>• Up to 80% smaller PNG files</li>
+                  <li>• Up to 80% smaller PDF files</li>
                   <li>• No uploads — everything stays on your device</li>
-                  <li>• Perfect for web, apps, and UI assets</li>
+                  <li>• Perfect for email, sharing, and archiving</li>
                 </ul>
               </div>
               <div className="rounded-xl bg-slate-50 p-4 text-xs text-slate-500">
@@ -108,9 +108,9 @@ export default async function Home() {
                   Tip for best results:
                 </p>
                 <p>
-                  Icons and UI assets already optimized as SVG or WebP may not
-                  compress much further. PNG Minify works best on screenshots
-                  and photographic PNGs.
+                  PDFs with embedded images (screenshots, scans, presentations)
+                  usually compress the most. Text-only PDFs are often already
+                  optimized.
                 </p>
               </div>
             </div>
@@ -128,27 +128,27 @@ export default async function Home() {
 
         {/* HOW IT WORKS */}
         <section className="mx-auto max-w-5xl px-4 pb-10 sm:px-6 sm:pb-14">
-          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="text-xl font-semibold text-slate-900 sm:text-2xl">
               How it works
             </h2>
             <p className="text-xs text-slate-500 sm:text-sm">
-              Three simple steps to smaller PNGs.
+                  Three simple steps to smaller PDFs.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             {[
               {
                 title: "1. Upload",
-                desc: "Drag & drop your PNG files or browse from your device. We only accept PNG — no JPG or WebP.",
+                  desc: "Drag & drop your PDF files or browse from your device. We only accept PDF — no images or other file types.",
               },
               {
                 title: "2. Compress",
-                desc: "PNG Minify optimizes your images entirely in the browser, using adjustable quality settings.",
+                  desc: "PDF Minify optimizes your documents entirely in the browser. No files are ever uploaded to a server.",
               },
               {
                 title: "3. Download",
-                desc: "Download individual files or all at once as a ZIP archive, ready to use on web or apps.",
+                  desc: "Download individual compressed PDFs or all at once as a ZIP archive, ready to share or upload.",
               },
             ].map((step) => (
               <div
@@ -175,27 +175,27 @@ export default async function Home() {
             {[
               {
                 title: "Browser-side only",
-                desc: "Compression runs in your browser. Images are never uploaded to any server.",
+                desc: "Compression runs in your browser. Documents are never uploaded to any server.",
               },
               {
                 title: "Batch compression",
-                desc: "Drop up to 20 PNG files at once and compress them in a single run.",
+                desc: "Drop up to 20 PDF files at once and compress them in a single run.",
               },
               {
-                title: "Quality control",
-                desc: "Fine-tune the compression level with a simple slider to balance size and quality.",
+                title: "Smart document compression",
+                desc: "Optimize PDFs while preserving text, images, and structure so they stay easy to read and share.",
               },
               {
                 title: "Practical size limits",
-                desc: "Each PNG can be up to 50 MB — large enough for most design and product assets.",
+                desc: "Each PDF can be up to 50 MB — large enough for most reports, e‑books, and presentations.",
               },
               {
                 title: "Free forever",
-                desc: "No paywalls, no credits. PNG Minify is free to use for everyone.",
+                desc: "No paywalls, no credits. PDF Minify is free to use for everyone.",
               },
               {
                 title: "No watermark",
-                desc: "Your images stay clean — we never stamp or modify them beyond compression.",
+                desc: "Your documents stay clean — we never stamp or modify them beyond compression.",
               },
             ].map((feature) => (
               <div
@@ -213,6 +213,46 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* Related tools */}
+        <section className="mx-auto max-w-5xl px-4 pb-6 sm:px-6 sm:pb-10">
+          <div className="rounded-2xl bg-white p-4 text-xs text-slate-600 shadow-sm shadow-slate-100 sm:text-sm">
+            <h2 className="mb-2 text-sm font-semibold text-slate-900">
+              Related tools
+            </h2>
+            <p>
+              Also try{" "}
+              <a
+                href="https://pngminify.com"
+                className="text-primary underline-offset-2 hover:underline"
+              >
+                pngminify.com
+              </a>
+              ,{" "}
+              <a
+                href="https://miniwebp.com"
+                className="text-primary underline-offset-2 hover:underline"
+              >
+                miniwebp.com
+              </a>
+              ,{" "}
+              <a
+                href="https://miniheic.com"
+                className="text-primary underline-offset-2 hover:underline"
+              >
+                miniheic.com
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://mp3mini.com"
+                className="text-primary underline-offset-2 hover:underline"
+              >
+                mp3mini.com
+              </a>{" "}
+              for image and audio compression.
+            </p>
+          </div>
+        </section>
+
         {/* FAQ */}
         <section className="mx-auto max-w-5xl px-4 pb-10 sm:px-6 sm:pb-14">
           <h2 className="mb-4 text-xl font-semibold text-slate-900 sm:text-2xl">
@@ -221,28 +261,28 @@ export default async function Home() {
           <div className="space-y-3">
             {[
               {
-                q: "Is PNG Minify free?",
-                a: "Yes. PNG Minify is completely free to use. There are no hidden fees or usage limits.",
+                q: "Is PDF Minify free?",
+                a: "Yes. PDF Minify is completely free to use. There are no hidden fees or usage limits.",
               },
               {
-                q: "Does my image get uploaded to a server?",
-                a: "No. All compression happens locally in your browser using JavaScript. Your PNGs never leave your device.",
+                q: "Does my PDF get uploaded to a server?",
+                a: "No. All compression happens locally in your browser using JavaScript. Your PDFs never leave your device.",
               },
               {
                 q: "What is the maximum file size?",
-                a: "Each PNG file can be up to 50 MB, and you can compress up to 20 files at a time.",
+                a: "Each PDF file can be up to 50 MB, and you can compress up to 20 files at a time.",
               },
               {
-                q: "How much can I compress a PNG?",
-                a: "It depends on the image. Many PNGs can be reduced by 30–80% without visible quality loss, especially photographic content.",
+                q: "How much can I compress a PDF?",
+                a: "It depends on the content. Many PDFs can be reduced by 30–80% without visible quality loss, especially if they contain large embedded images.",
               },
               {
-                q: "Do you support JPG, WEBP or other formats?",
-                a: "PNG Minify is focused on PNG only. For WEBP files we recommend using miniwebp.com.",
+                q: "Do you support Word, JPG, or other formats?",
+                a: "PDF Minify is focused on PDF only. For images we recommend tools like pngminify.com, miniwebp.com, and miniheic.com.",
               },
               {
-                q: "Can I use PNG Minify for commercial projects?",
-                a: "Yes. You can use the compressed images in any personal or commercial project.",
+                q: "Can I use PDF Minify for commercial projects?",
+                a: "Yes. You can use the compressed PDFs in any personal or commercial project.",
               },
             ].map((item) => (
               <details

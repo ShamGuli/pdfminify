@@ -64,23 +64,23 @@ export async function generateMetadata(
   const post = await getPost(slug);
   if (!post) {
     return {
-      title: "Post not found | PNG Minify Blog",
+      title: "Post not found | PDF Minify Blog",
     };
   }
 
-  const baseUrl = "https://pngminify.com";
+  const baseUrl = "https://pdfminify.com";
   const url = `${baseUrl}/blog/${post.slug}`;
 
   return {
-    title: `${post.title} | PNG Minify Blog`,
+    title: `${post.title} | PDF Minify Blog`,
     description:
       post.excerpt ??
-      "PNG optimization tips and best practices from PNG Minify.",
+      "PDF optimization tips and best practices from PDF Minify.",
     openGraph: {
       title: post.title,
       description:
         post.excerpt ??
-        "PNG optimization tips and best practices from PNG Minify.",
+        "PDF optimization tips and best practices from PDF Minify.",
       url,
       type: "article",
       images: post.cover_image ? [post.cover_image] : ["/og.png"],
@@ -130,22 +130,22 @@ export default async function BlogPostPage({
     headline: post.title,
     description:
       post.excerpt ??
-      "PNG optimization tips and best practices from PNG Minify.",
-    image: post.cover_image ? [post.cover_image] : ["https://pngminify.com/og.png"],
-    url: `https://pngminify.com/blog/${post.slug}`,
+      "PDF optimization tips and best practices from PDF Minify.",
+    image: post.cover_image ? [post.cover_image] : ["https://pdfminify.com/og.png"],
+    url: `https://pdfminify.com/blog/${post.slug}`,
     datePublished: post.created_at ?? undefined,
     dateModified: post.updated_at ?? post.created_at ?? undefined,
     author: {
       "@type": "Organization",
-      name: "PNG Minify",
-      url: "https://pngminify.com",
+      name: "PDF Minify",
+      url: "https://pdfminify.com",
     },
     publisher: {
       "@type": "Organization",
-      name: "PNG Minify",
+      name: "PDF Minify",
       logo: {
         "@type": "ImageObject",
-        url: "https://pngminify.com/og.png",
+        url: "https://pdfminify.com/og.png",
       },
     },
   };

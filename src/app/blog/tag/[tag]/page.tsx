@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { tag } = await params;
   const decoded = decodeURIComponent(tag);
   return {
-    title: `Posts tagged: ${decoded} | PNG Minify Blog`,
-    description: `All blog posts tagged with "${decoded}" on PNG Minify.`,
+    title: `Posts tagged: ${decoded} | PDF Minify Blog`,
+    description: `All blog posts tagged with "${decoded}" on PDF Minify.`,
   };
 }
 

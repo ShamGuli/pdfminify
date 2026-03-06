@@ -15,6 +15,13 @@ declare global {
   }
 }
 
+// Ads are temporarily hidden. To restore, uncomment the original implementation below.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function AdBanner(_props: AdBannerProps) {
+  return null;
+}
+
+/*
 export default function AdBanner({
   className,
   format = "auto",
@@ -47,4 +54,5 @@ export default function AdBanner({
     </div>
   );
 }
+*/
 

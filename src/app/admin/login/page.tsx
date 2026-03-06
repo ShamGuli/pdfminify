@@ -69,7 +69,7 @@ function LoginForm() {
       <div className="w-full max-w-md rounded-2xl bg-white p-6 text-sm text-slate-700 shadow-md shadow-slate-200 sm:p-8">
         <div className="mb-6 text-center">
           <p className="mx-auto mb-2 inline-flex items-center rounded-full bg-primary/5 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/10">
-            PNG Minify Admin
+            PDF Minify Admin
           </p>
           <h1 className="text-xl font-semibold text-slate-900 sm:text-2xl">
             Sign in

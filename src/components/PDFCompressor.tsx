@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useRef, useState } from "react";
-import imageCompression from "browser-image-compression";
+import { PDFDocument } from "pdf-lib";
 import JSZip from "jszip";
 
 type FileStatus = "idle" | "processing" | "done" | "error" | "warn";
@@ -18,7 +18,6 @@ type Item = {
   progress: number;
   downloadUrl?: string;
   compressedBlob?: Blob;
-  thumbnailUrl?: string;
 };
 
 function formatBytes(bytes: number): string {
@@ -38,21 +37,92 @@ function calcPercent(original: number, compressed: number): number {
   return Math.max(0, Math.round(((original - compressed) / original) * 100));
 }
 
-// Map quality slider (0.1–1.0) → target maxSizeMB relative to original
-function qualityToMaxSizeMB(originalBytes: number, quality: number): number {
-  const originalMB = originalBytes / 1024 / 1024;
-  // quality 1.0 = 90% of original, quality 0.1 = 5% of original
-  const factor = 0.05 + quality * 0.85;
-  return Math.max(0.05, originalMB * factor);
+function base64ToUint8Array(base64: string): Uint8Array {
+  const binaryString = atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+async function renderPdfToBlob(
+  buffer: ArrayBuffer,
+  scale: number,
+  jpegQuality: number,
+  onProgress: (pct: number) => void,
+): Promise<Blob> {
+  const pdfjsLib = await import("pdfjs-dist");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+
+  const pdfDoc = await pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise;
+  const numPages = pdfDoc.numPages;
+  const outputPdf = await PDFDocument.create();
+
+  for (let i = 1; i <= numPages; i++) {
+    const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({ scale });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(viewport.width);
+    canvas.height = Math.round(viewport.height);
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas context not available");
+
+    await page.render({
+      canvasContext: ctx as unknown as CanvasRenderingContext2D,
+      viewport,
+    }).promise;
+
+    const jpeg = canvas.toDataURL("image/jpeg", jpegQuality).split(",")[1];
+    const img = await outputPdf.embedJpg(base64ToUint8Array(jpeg));
+    const newPage = outputPdf.addPage([canvas.width, canvas.height]);
+    newPage.drawImage(img, { x: 0, y: 0, width: canvas.width, height: canvas.height });
+
+    canvas.width = 1;
+    canvas.height = 1;
+
+    onProgress(10 + Math.round((i / numPages) * 75));
+  }
+
+  onProgress(90);
+  const bytes = await outputPdf.save({ useObjectStreams: true });
+  return new Blob([bytes], { type: "application/pdf" });
+}
+
+async function compressPdfCanvas(
+  buffer: ArrayBuffer,
+  quality: number,
+  originalSize: number,
+  onProgress: (pct: number) => void,
+): Promise<Blob> {
+  onProgress(5);
+
+  // quality 0.1 → scale 0.45, jpegQ 0.18  (aggressive)
+  // quality 1.0 → scale 1.3,  jpegQ 0.78  (high quality)
+  const scale = 0.45 + quality * 0.85;
+  const jpegQuality = 0.18 + quality * 0.6;
+
+  let result = await renderPdfToBlob(buffer, scale, jpegQuality, onProgress);
+
+  // If result is still bigger than original, retry with more aggressive settings
+  if (result.size >= originalSize) {
+    onProgress(10);
+    result = await renderPdfToBlob(buffer, 0.45, 0.18, onProgress);
+  }
+
+  onProgress(98);
+  return result;
 }
 
 const MAX_FILES = 20;
-const MAX_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
+const MAX_SIZE_BYTES = 50 * 1024 * 1024;
 
-export default function Compressor() {
+export default function PDFCompressor() {
   const [items, setItems] = useState<Item[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [quality, setQuality] = useState(0.8);
+  const [quality, setQuality] = useState(0.4);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isZipping, setIsZipping] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -69,7 +139,6 @@ export default function Compressor() {
     setItems((current) => {
       current.forEach((item) => {
         if (item.downloadUrl) URL.revokeObjectURL(item.downloadUrl);
-        if (item.thumbnailUrl) URL.revokeObjectURL(item.thumbnailUrl);
       });
       return [];
     });
@@ -79,25 +148,24 @@ export default function Compressor() {
   const compressFile = useCallback(
     async (item: Item) => {
       try {
-        const maxSizeMB = qualityToMaxSizeMB(item.originalSize, quality);
+        updateItem(item.id, { status: "processing", progress: 5 });
 
-        const result = await imageCompression(item.file, {
-          maxSizeMB,
-          maxWidthOrHeight: 16384,
-          useWebWorker: true,
-          fileType: "image/png",
-          onProgress: (pct) => {
-            // pct goes 0 → 100 during compression
-            updateItem(item.id, { progress: Math.max(10, Math.round(pct * 0.9)) });
-          },
-        });
+        const buffer = await item.file.arrayBuffer();
 
-        // Warn if compressed result is larger than original
-        if (result.size >= item.originalSize) {
+        const compressedBlob = await compressPdfCanvas(
+          buffer,
+          quality,
+          item.originalSize,
+          (pct) => updateItem(item.id, { progress: pct }),
+        );
+
+        const compressedSize = compressedBlob.size;
+
+        if (compressedSize >= item.originalSize) {
           const url = URL.createObjectURL(item.file);
           updateItem(item.id, {
             status: "warn",
-            compressedSize: result.size,
+            compressedSize,
             percentSaved: 0,
             progress: 100,
             downloadUrl: url,
@@ -108,14 +176,14 @@ export default function Compressor() {
           return;
         }
 
-        const downloadUrl = URL.createObjectURL(result);
+        const downloadUrl = URL.createObjectURL(compressedBlob);
         updateItem(item.id, {
           status: "done",
-          compressedSize: result.size,
-          percentSaved: calcPercent(item.originalSize, result.size),
+          compressedSize,
+          percentSaved: calcPercent(item.originalSize, compressedSize),
           progress: 100,
           downloadUrl,
-          compressedBlob: result,
+          compressedBlob,
         });
       } catch (err) {
         updateItem(item.id, {
@@ -142,23 +210,22 @@ export default function Compressor() {
       }
 
       for (const file of selected) {
-        if (file.type !== "image/png") {
-          const ext = file.name.split(".").pop()?.toUpperCase() ?? "unknown";
-          if (["WEBP", "WEBM"].includes(ext)) {
-            errors.push(
-              `Only PNG files are supported. Try miniwebp.com for WEBP files.`,
-            );
-          } else {
-            errors.push(
-              `Only PNG files are supported. "${file.name}" (${ext}) is not a PNG file.`,
-            );
-          }
+        const isPdf =
+          file.type === "application/pdf" ||
+          file.name.toLowerCase().endsWith(".pdf");
+
+        if (!isPdf) {
+          errors.push(
+            `Only PDF files are supported. "${file.name}" is not a PDF file.`,
+          );
           continue;
         }
+
         if (file.size > MAX_SIZE_BYTES) {
           errors.push(`"${file.name}" exceeds the 50 MB limit.`);
           continue;
         }
+
         valid.push(file);
       }
 
@@ -174,13 +241,12 @@ export default function Compressor() {
         originalSize: file.size,
         status: "processing",
         progress: 5,
-        thumbnailUrl: URL.createObjectURL(file),
       }));
 
       setItems((prev) => [...prev, ...newItems]);
 
-      // compress each sequentially to avoid saturating device memory
       for (const item of newItems) {
+        // eslint-disable-next-line no-await-in-loop
         await compressFile(item);
       }
     },
@@ -205,17 +271,16 @@ export default function Compressor() {
       setIsDragInvalid(false);
 
       const files = event.dataTransfer.files;
-      // Immediately reject if ALL files are non-PNG
-      const allNonPng =
+      const allNonPdf =
         files.length > 0 &&
-        Array.from(files).every((f) => f.type !== "image/png");
-      if (allNonPng) {
-        const ext =
-          files[0].name.split(".").pop()?.toUpperCase() ?? "unknown";
-        const msg = ["WEBP", "WEBM"].includes(ext)
-          ? "Only PNG files are supported. Try miniwebp.com for WEBP files."
-          : "Only PNG files are supported. Please drop PNG images.";
-        setErrorMessage(msg);
+        Array.from(files).every(
+          (f) =>
+            f.type !== "application/pdf" &&
+            !f.name.toLowerCase().endsWith(".pdf"),
+        );
+
+      if (allNonPdf) {
+        setErrorMessage("Only PDF files are supported. Please drop PDF documents.");
         return;
       }
 
@@ -227,11 +292,10 @@ export default function Compressor() {
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    // Check if dragged items contain non-PNG files
-    const hasNonPng = Array.from(event.dataTransfer.items).some(
-      (item) => item.kind === "file" && item.type !== "image/png",
+    const hasNonPdf = Array.from(event.dataTransfer.items).some(
+      (item) => item.kind === "file" && item.type !== "application/pdf",
     );
-    setIsDragInvalid(hasNonPng);
+    setIsDragInvalid(hasNonPdf);
     setIsDragging(true);
   }, []);
 
@@ -256,7 +320,9 @@ export default function Compressor() {
       completed.forEach((item) => {
         if (item.compressedBlob) {
           zip.file(
-            item.name.replace(/\.png$/i, "-min.png"),
+            item.name.toLowerCase().endsWith(".pdf")
+              ? item.name.replace(/\.pdf$/i, "-min.pdf")
+              : `${item.name}-min.pdf`,
             item.compressedBlob,
           );
         }
@@ -265,7 +331,7 @@ export default function Compressor() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "pngminify-compressed.zip";
+      a.download = "pdfminify-compressed.zip";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -282,11 +348,20 @@ export default function Compressor() {
     [items],
   );
 
+  const qualityLabel =
+    quality <= 0.3
+      ? "Maximum compression"
+      : quality <= 0.55
+        ? "Strong compression"
+        : quality <= 0.75
+          ? "Balanced"
+          : "High quality";
+
   return (
-    <div className="space-y-6">
-      {/* ─── Upload zone ─── */}
+    <div className="space-y-4">
+      {/* Upload zone */}
       <div
-        className={`relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed px-6 py-10 text-center transition-colors sm:px-8 ${
+        className={`relative flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed px-4 py-8 text-center transition-colors sm:px-8 sm:py-10 ${
           isDragging && isDragInvalid
             ? "border-red-400 bg-red-50"
             : isDragging
@@ -302,7 +377,7 @@ export default function Compressor() {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/png"
+          accept="application/pdf"
           multiple
           className="hidden"
           onChange={onInputChange}
@@ -310,31 +385,34 @@ export default function Compressor() {
 
         <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
           <span className="h-2 w-2 rounded-full bg-primary" />
-          Drop PNG files here to start
+          Drop PDF files here to start
         </div>
 
-        <div className="mt-4 space-y-3">
+        <div className="mt-3 w-full space-y-3">
           <p className="text-sm text-slate-600">
-            Drag &amp; drop PNG images or click to browse.
+            Drag &amp; drop PDF documents or click to browse.
           </p>
-          <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
+          <div className="flex flex-col items-center gap-2">
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-white shadow-sm shadow-primary/40 transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="inline-flex w-full max-w-xs items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-white shadow-sm shadow-primary/40 transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:w-auto sm:py-2.5"
             >
-              Choose PNG files
+              Choose PDF files
             </button>
             <p className="text-xs text-slate-500">
-              Max {MAX_FILES} files • PNG only • &lt; 50 MB each.
+              Max {MAX_FILES} files • PDF only • &lt; 50 MB each.
             </p>
           </div>
         </div>
 
         {/* Quality slider */}
-        <div className="mt-6 w-full max-w-md space-y-2">
+        <div
+          className="mt-5 w-full max-w-sm space-y-2 sm:max-w-md"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="flex items-center justify-between text-xs text-slate-600">
-            <span>Target size reduction</span>
-            <span>{Math.round(quality * 100)}%</span>
+            <span>Compression level</span>
+            <span className="font-medium text-primary">{qualityLabel}</span>
           </div>
           <input
             type="range"
@@ -344,45 +422,50 @@ export default function Compressor() {
             value={quality}
             onChange={(e) => setQuality(parseFloat(e.target.value))}
             className="w-full accent-primary"
-            onClick={(e) => e.stopPropagation()}
           />
-          <p className="text-[11px] text-slate-500">
-            Lower = smaller output. Results vary by PNG content.
+          <div className="flex justify-between text-[11px] text-slate-400">
+            <span>Smaller file</span>
+            <span>Better quality</span>
+          </div>
+          <p className="text-[11px] text-slate-400">
+            Pages are rendered as images for maximum compression. Text will not be selectable in output.
           </p>
         </div>
 
         {errorMessage && (
-          <p className="mt-4 max-w-md text-xs text-red-600">{errorMessage}</p>
+          <p className="mt-3 w-full max-w-sm text-xs text-red-600 sm:max-w-md">
+            {errorMessage}
+          </p>
         )}
       </div>
 
-      {/* ─── File list ─── */}
+      {/* File list */}
       {items.length > 0 && (
-        <div className="space-y-4 rounded-2xl bg-white p-4 shadow-sm shadow-slate-100 sm:p-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-3 rounded-2xl bg-white p-3 shadow-sm shadow-slate-100 sm:p-5">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm font-medium text-slate-800">
               Files ({items.length})
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2">
               <button
                 type="button"
                 onClick={handleDownloadAll}
                 disabled={!anyDone || isZipping}
-                className="inline-flex items-center justify-center rounded-full border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex-1 rounded-full border border-slate-300 px-3 py-2 text-xs font-medium text-slate-700 shadow-sm transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none sm:py-1.5"
               >
                 {isZipping ? "Preparing ZIP…" : "Download all"}
               </button>
               <button
                 type="button"
                 onClick={resetAll}
-                className="inline-flex items-center justify-center rounded-full border border-transparent px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
+                className="flex-1 rounded-full border border-transparent px-3 py-2 text-xs font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 sm:flex-none sm:py-1.5"
               >
                 Compress another
               </button>
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {items.map((item) => {
               const isDone = item.status === "done";
               const isWarn = item.status === "warn";
@@ -398,106 +481,72 @@ export default function Compressor() {
                     : "bg-primary";
 
               const statusText = isError
-                ? item.error ?? "Compression failed."
+                ? "Error"
                 : isWarn
-                  ? item.error ?? "Could not reduce file size."
+                  ? "No savings"
                   : isDone
-                    ? "Compressed successfully."
-                    : "Compressing…";
+                    ? "Done"
+                    : isProcessing
+                      ? "Compressing…"
+                      : "Waiting";
 
               return (
                 <div
                   key={item.id}
-                  className="grid grid-cols-1 gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3 sm:grid-cols-[1fr_180px_120px] sm:items-center sm:gap-4"
+                  className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-700"
                 >
-                  {/* Thumbnail + name + sizes */}
-                  <div className="flex min-w-0 items-center gap-3">
-                    {item.thumbnailUrl && (
-                      <div className="hidden h-12 w-12 flex-none overflow-hidden rounded-md bg-white shadow-sm sm:block">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={item.thumbnailUrl}
-                          alt={item.name}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="min-w-0">
-                      <p className="truncate text-xs font-medium text-slate-800 sm:text-sm">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-xs font-medium text-slate-900 sm:text-sm">
                         {item.name}
                       </p>
                       <p className="mt-0.5 text-[11px] text-slate-500">
                         {formatBytes(item.originalSize)}
-                        {item.compressedSize != null && (
+                        {typeof item.compressedSize === "number" && (
                           <>
-                            {" → "}
-                            <span
-                              className={
-                                isDone
-                                  ? "font-medium text-emerald-600"
-                                  : isWarn
-                                    ? "font-medium text-amber-600"
-                                    : ""
-                              }
-                            >
-                              {formatBytes(item.compressedSize)}
-                            </span>
-                            {item.percentSaved != null &&
+                            {" "}→ {formatBytes(item.compressedSize)}{" "}
+                            {typeof item.percentSaved === "number" &&
                               item.percentSaved > 0 && (
-                                <span className="ml-1 text-emerald-600">
-                                  ({item.percentSaved}% smaller)
+                                <span className="font-semibold text-emerald-600">
+                                  (−{item.percentSaved}%)
                                 </span>
                               )}
                           </>
                         )}
                       </p>
                     </div>
-                  </div>
-
-                  {/* Progress bar + status */}
-                  <div className="space-y-1.5">
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
-                      <div
-                        className={`h-full rounded-full transition-all ${barColor}`}
-                        style={{ width: `${item.progress}%` }}
-                      />
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      <span className="text-[11px] text-slate-400">
+                        {statusText}
+                      </span>
+                      {item.downloadUrl && (
+                        <a
+                          href={item.downloadUrl}
+                          download={
+                            item.name.toLowerCase().endsWith(".pdf")
+                              ? item.name.replace(/\.pdf$/i, "-min.pdf")
+                              : `${item.name}-min.pdf`
+                          }
+                          className="inline-flex items-center rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-white shadow-sm shadow-primary/40 transition hover:bg-primary/90 active:scale-95"
+                        >
+                          Download
+                        </a>
+                      )}
                     </div>
-                    <p
-                      className={`text-[11px] ${
-                        isError
-                          ? "text-red-600"
-                          : isWarn
-                            ? "text-amber-600"
-                            : isProcessing
-                              ? "text-slate-500"
-                              : "text-emerald-600"
-                      }`}
-                    >
-                      {statusText}
-                    </p>
                   </div>
 
-                  {/* Download button — separate column, never clipped */}
-                  <div className="flex items-center justify-start sm:justify-end">
-                    <button
-                      type="button"
-                      disabled={
-                        (!isDone && !isWarn) || !item.downloadUrl
-                      }
-                      onClick={() => {
-                        if (!item.downloadUrl) return;
-                        const a = document.createElement("a");
-                        a.href = item.downloadUrl;
-                        a.download = item.name.replace(/\.png$/i, "-min.png");
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                      }}
-                      className="inline-flex min-w-[100px] items-center justify-center whitespace-nowrap rounded-full border border-slate-300 px-4 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      Download
-                    </button>
+                  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                    <div
+                      className={`h-full rounded-full ${barColor} transition-all duration-300`}
+                      style={{ width: `${Math.min(100, item.progress)}%` }}
+                    />
                   </div>
+
+                  {item.error && (
+                    <p className="mt-1 text-[11px] text-amber-600">
+                      {item.error}
+                    </p>
+                  )}
                 </div>
               );
             })}

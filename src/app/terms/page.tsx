@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — PNG Minify",
+  title: "Terms of Service — PDF Minify",
   description:
-    "Terms of Service for using PNG Minify, a free browser-based PNG compression tool.",
+    "Terms of Service for using PDF Minify, a free browser-based PDF compression tool.",
 };
 
 export default function TermsPage() {
@@ -24,7 +24,7 @@ export default function TermsPage() {
 
         <section className="space-y-3">
           <p>
-            By using PNG Minify (the "Service"), you agree to the following
+            By using PDF Minify (the "Service"), you agree to the following
             terms. If you do not agree, please do not use the Service.
           </p>
 
@@ -32,7 +32,7 @@ export default function TermsPage() {
             1. Free utility, no guarantees
           </h2>
           <p>
-            PNG Minify is provided as a free utility tool. While we aim for
+            PDF Minify is provided as a free utility tool. While we aim for
             reliable operation, the Service is provided "as is" without any
             warranties of any kind.
           </p>
@@ -41,16 +41,16 @@ export default function TermsPage() {
             2. Your responsibility for backups
           </h2>
           <p>
-            Always keep a backup of your original images. We are not
-            responsible for any loss of data or quality resulting from using
-            the Service.
+            Always keep a backup of your original documents. We are not
+            responsible for any loss of data, quality, or content resulting
+            from using the Service.
           </p>
 
           <h2 className="text-sm font-semibold text-slate-900">
             3. Acceptable use
           </h2>
           <p>
-            You agree not to use PNG Minify for any illegal activities or to
+            You agree not to use PDF Minify for any illegal activities or to
             process content that is unlawful, harmful, or infringes on the
             rights of others.
           </p>
@@ -59,7 +59,7 @@ export default function TermsPage() {
             4. Changes to the Service
           </h2>
           <p>
-            We may modify, suspend, or discontinue PNG Minify at any time
+            We may modify, suspend, or discontinue PDF Minify at any time
             without prior notice.
           </p>
 
@@ -67,10 +67,10 @@ export default function TermsPage() {
           <p>
             For questions about these terms, contact{" "}
             <a
-              href="mailto:hello@pngminify.com"
+              href="mailto:hello@pdfminify.com"
               className="text-primary underline-offset-2 hover:underline"
             >
-              hello@pngminify.com
+              hello@pdfminify.com
             </a>
             .
           </p>

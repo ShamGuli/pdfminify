@@ -1,7 +1,7 @@
-Bu layihə pngminify.com saytıdır.
+Bu layihə pdfminify.com saytıdır.
 Stack: Next.js 14 App Router, TypeScript, Tailwind CSS, Supabase, Vercel
-Məqsəd: Browser-side PNG compression saytı
-Dizayn: Təmiz minimal, FreeConvert.com stilində, primary rəng #6C47FF (bənövşəyi), ağ arxa fon
-Emal: HƏMİŞƏ browser-side (Canvas API), heç vaxt server-side fayl emalı
+Məqsəd: Browser-side PDF compression saytı
+Dizayn: Təmiz minimal, primary rəng #E53E3E (qırmızı), ağ arxa fon
+Emal: HƏMİŞƏ browser-side, heç vaxt server-side fayl emalı
 SEO: Hər səhifədə metadata, JSON-LD schema, sitemap, robots
 Dil: İngilis dili (global bazar)

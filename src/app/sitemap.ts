@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://pngminify.com";
+const SITE_URL = "https://pdfminify.com";
 
 type Post = {
   slug: string;

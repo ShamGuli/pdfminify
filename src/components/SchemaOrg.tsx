@@ -1,9 +1,9 @@
 const webAppSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "PNG Minify",
-  url: "https://pngminify.com",
-  applicationCategory: "MultimediaApplication",
+  name: "PDF Minify",
+  url: "https://pdfminify.com",
+  applicationCategory: "UtilityApplication",
   operatingSystem: "Any",
   browserRequirements: "Requires a modern web browser with JavaScript enabled",
   offers: {
@@ -12,19 +12,19 @@ const webAppSchema = {
     priceCurrency: "USD",
   },
   description:
-    "Compress PNG images online for free. Reduce file size up to 80% without losing quality. No upload to server — 100% private.",
+    "Compress PDF files online for free. Reduce file size up to 80% without losing quality. No upload to server — 100% private.",
   featureList: [
     "Browser-side compression — files never leave your device",
-    "Batch processing — compress up to 20 files at once",
+    "Batch processing — compress multiple PDFs at once",
     "No file upload required",
     "Download all as ZIP",
-    "Adjustable compression level",
+    "Designed for documents, reports, and e‑books",
   ],
-  screenshot: "https://pngminify.com/og.png",
+  screenshot: "https://pdfminify.com/og.png",
   creator: {
     "@type": "Organization",
-    name: "PNG Minify",
-    url: "https://pngminify.com",
+    name: "PDF Minify",
+    url: "https://pdfminify.com",
   },
 };
 
@@ -34,18 +34,18 @@ const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "Is PNG Minify free?",
+      name: "Is PDF Minify free?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes, PNG Minify is completely free. There are no hidden fees, subscriptions, or limits on the number of files you can compress.",
+        text: "Yes, PDF Minify is completely free. There are no hidden fees, subscriptions, or limits on the number of files you can compress.",
       },
     },
     {
       "@type": "Question",
-      name: "Does my image get uploaded to a server?",
+      name: "Does my PDF get uploaded to a server?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "No. All compression happens entirely in your browser using JavaScript. Your images never leave your device and are never sent to any server.",
+        text: "No. All compression happens entirely in your browser using JavaScript. Your PDFs never leave your device and are never sent to any server.",
       },
     },
     {
@@ -53,15 +53,15 @@ const faqSchema = {
       name: "What is the maximum file size?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Each PNG file can be up to 50 MB. You can compress up to 20 files at once.",
+        text: "Each PDF file can be up to 50 MB. You can compress multiple documents at once.",
       },
     },
     {
       "@type": "Question",
-      name: "How much can I compress a PNG?",
+      name: "How much can I compress a PDF?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Results vary depending on the PNG content, but typical savings range from 30% to 80%. Photographic PNGs compress more than simple graphics or icons.",
+        text: "Results vary depending on the document, but typical savings range from 30% to 80%, especially for PDFs with large embedded images.",
       },
     },
   ],

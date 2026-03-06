@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — PNG Minify",
+  title: "Privacy Policy — PDF Minify",
   description:
-    "Learn how PNG Minify handles your data. All PNG compression runs entirely in your browser — no uploads, no tracking.",
+    "Learn how PDF Minify handles your data. All PDF compression runs entirely in your browser — no uploads, no tracking.",
 };
 
 export default function PrivacyPage() {
@@ -24,17 +24,17 @@ export default function PrivacyPage() {
 
         <section className="space-y-3">
           <p>
-            PNG Minify is a simple utility for compressing PNG images in your
+            PDF Minify is a simple utility for compressing PDF documents in your
             browser. We have designed the tool to be privacy-first by default.
           </p>
 
           <h2 className="text-sm font-semibold text-slate-900">
-            1. No image uploads
+            1. No document uploads
           </h2>
           <p>
             All compression happens entirely in your browser using
-            JavaScript-based algorithms. Your PNG files are never sent to our
-            servers or any third party service. The images remain on your
+            JavaScript-based algorithms. Your PDF files are never sent to our
+            servers or any third party service. The documents remain on your
             device at all times.
           </p>
 
@@ -51,7 +51,7 @@ export default function PrivacyPage() {
             3. Temporary in-memory processing
           </h2>
           <p>
-            When you drop a PNG file onto PNG Minify, it is processed directly
+            When you drop a PDF file onto PDF Minify, it is processed directly
             in the open browser tab. Once you close or refresh the page,
             everything is cleared from memory by your browser.
           </p>
@@ -61,10 +61,10 @@ export default function PrivacyPage() {
             If you have questions about this Privacy Policy, you can reach us
             at{" "}
             <a
-              href="mailto:hello@pngminify.com"
+              href="mailto:hello@pdfminify.com"
               className="text-primary underline-offset-2 hover:underline"
             >
-              hello@pngminify.com
+              hello@pdfminify.com
             </a>
             .
           </p>

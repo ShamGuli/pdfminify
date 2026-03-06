@@ -3,39 +3,39 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "PNG Minify FAQ — Frequently Asked Questions",
+  title: "PDF Minify FAQ — Frequently Asked Questions",
   description:
-    "Answers to common questions about PNG Minify: pricing, privacy, limits, and how PNG compression works.",
+    "Answers to common questions about PDF Minify: pricing, privacy, limits, and how PDF compression works.",
 };
 
 const faqs = [
   {
-    q: "Is PNG Minify free?",
-    a: "Yes. PNG Minify is completely free to use. There are no hidden fees or usage limits.",
+    q: "Is PDF Minify free?",
+    a: "Yes. PDF Minify is completely free to use. There are no hidden fees or usage limits.",
   },
   {
-    q: "Does my image get uploaded to a server?",
-    a: "No. All compression happens locally in your browser using JavaScript. Your PNGs never leave your device.",
+    q: "Does my PDF get uploaded to a server?",
+    a: "No. All compression happens locally in your browser using JavaScript. Your PDFs never leave your device.",
   },
   {
     q: "What is the maximum file size?",
-    a: "Each PNG file can be up to 50 MB, and you can compress up to 20 files at a time.",
+    a: "Each PDF file can be up to 50 MB, and you can compress up to 20 files at a time.",
   },
   {
-    q: "How much can I compress a PNG?",
-    a: "It depends on the image. Many PNGs can be reduced by 30–80% without visible quality loss, especially photographic content.",
+    q: "How much can I compress a PDF?",
+    a: "It depends on the document. Many PDFs can be reduced by 30–80% without visible quality loss, especially if they contain large images.",
   },
   {
-    q: "Do you support JPG, WEBP or other formats?",
-    a: "PNG Minify focuses on PNG only. For WEBP files we recommend using miniwebp.com.",
+    q: "Do you support Word, JPG or other formats?",
+    a: "PDF Minify focuses on PDF only. For images we recommend tools like pngminify.com, miniwebp.com, and miniheic.com.",
   },
   {
-    q: "Can I use PNG Minify for commercial projects?",
-    a: "Yes. You can use the compressed images in any personal or commercial project.",
+    q: "Can I use PDF Minify for commercial projects?",
+    a: "Yes. You can use the compressed documents in any personal or commercial project.",
   },
   {
     q: "Is there a watermark on the output?",
-    a: "No. Your images stay clean — we do not add any watermarks or visual marks to your PNGs.",
+    a: "No. Your documents stay clean — we do not add any watermarks or visual marks to your PDFs.",
   },
 ];
 
@@ -49,7 +49,7 @@ export default function FaqPage() {
             Frequently Asked Questions
           </h1>
           <p className="max-w-xl text-sm text-slate-600">
-            Short answers to the most common questions about PNG Minify.
+            Short answers to the most common questions about PDF Minify.
           </p>
         </header>
 

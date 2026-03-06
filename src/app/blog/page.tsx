@@ -7,13 +7,13 @@ import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
 
 export const metadata: Metadata = {
-  title: "PNG Minify Blog — Tips for Faster, Lighter PNG Images",
+  title: "PDF Minify Blog — Tips for Smaller, Lighter PDF Files",
   description:
-    "Learn how to optimize PNG images for the web. Guides on compression, performance, best practices, and image workflows.",
+    "Learn how to optimize PDF documents for the web. Guides on compression, performance, best practices, and document workflows.",
   openGraph: {
-    title: "PNG Minify Blog — PNG Optimization Guides",
+    title: "PDF Minify Blog — PDF Optimization Guides",
     description:
-      "Deep dives on PNG optimization, performance tips, and image workflows for modern web apps.",
+      "Deep dives on PDF optimization, performance tips, and document workflows for modern web apps.",
     url: "/blog",
     type: "website",
   },
@@ -70,10 +70,10 @@ export default async function BlogIndexPage() {
             Blog
           </p>
           <h1 className="text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            PNG optimization tips &amp; best practices
+            PDF optimization tips &amp; best practices
           </h1>
           <p className="max-w-2xl text-sm text-slate-600 sm:text-base">
-            Articles about PNG compression, performance budgets, and image
+            Articles about PDF compression, file size optimization, and document
             workflows for modern websites and products.
           </p>
         </header>

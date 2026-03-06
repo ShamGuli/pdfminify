@@ -10,10 +10,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const siteTitle = "Free PNG Compressor Online — Reduce PNG Size | PNG Minify";
+const siteTitle = "Free PDF Compressor Online — Reduce PDF Size | PDF Minify";
 const siteDescription =
-  "Compress PNG images online for free. Reduce file size up to 80% without losing quality. No upload to server — 100% private.";
-const siteUrl = "https://pngminify.com";
+  "Compress PDF files online for free. Reduce file size up to 80% without losing quality. No upload to server — 100% private.";
+const siteUrl = "https://pdfminify.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -23,13 +23,13 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
     url: "/",
-    siteName: "PNG Minify",
+    siteName: "PDF Minify",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "PNG Minify — Free PNG Compressor Online",
+        alt: "PDF Minify — Free PDF Compressor Online",
       },
     ],
     type: "website",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#6C47FF",
+  themeColor: "#E53E3E",
 };
 
 export default function RootLayout({

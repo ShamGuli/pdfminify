@@ -4,9 +4,9 @@ import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact — PNG Minify",
+  title: "Contact — PDF Minify",
   description:
-    "Get in touch with the PNG Minify team. Ask questions, send feedback, or suggest new features.",
+    "Get in touch with the PDF Minify team. Ask questions, send feedback, or suggest new features.",
 };
 
 export default function ContactPage() {
@@ -19,7 +19,7 @@ export default function ContactPage() {
             Get in touch
           </p>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-            Contact PNG Minify
+            Contact PDF Minify
           </h1>
           <p className="text-sm text-slate-600">
             Have a question, bug report, or feature idea? Send us a quick
