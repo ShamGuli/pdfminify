@@ -70,8 +70,10 @@ async function renderPdfToBlob(
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("Canvas context not available");
 
-    await page.render({
-      canvasContext: ctx as unknown as CanvasRenderingContext2D,
+    // pdfjs-dist types and runtime can diverge between versions;
+    // cast to any so we rely on the actual runtime API.
+    await (page as any).render({
+      canvasContext: ctx,
       viewport,
     }).promise;
 
