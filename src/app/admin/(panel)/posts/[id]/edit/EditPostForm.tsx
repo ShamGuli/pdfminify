@@ -60,7 +60,7 @@ export default function EditPostForm({ initialPost }: { initialPost: EditPost })
     const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     const { data, error: uploadErr } = await supabase.storage
-      .from("covers")
+      .from("blog-images")
       .upload(fileName, file, { upsert: true });
 
     if (uploadErr) {
@@ -70,7 +70,7 @@ export default function EditPostForm({ initialPost }: { initialPost: EditPost })
     }
 
     const { data: urlData } = supabase.storage
-      .from("covers")
+      .from("blog-images")
       .getPublicUrl(data.path);
 
     update("coverImage", urlData.publicUrl);
