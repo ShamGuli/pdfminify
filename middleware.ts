@@ -50,5 +50,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  // /admin özünü + bütün alt route-ları tutur
+  matcher: ["/admin", "/admin/:path*"],
 };
