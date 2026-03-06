@@ -8,6 +8,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
 
+export const revalidate = 60;
+
 type Post = {
   id: string;
   title: string;

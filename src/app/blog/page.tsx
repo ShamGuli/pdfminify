@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "PDF Minify Blog — Tips for Smaller, Lighter PDF Files",
   description:
