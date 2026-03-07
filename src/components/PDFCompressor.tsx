@@ -414,12 +414,17 @@ export default function PDFCompressor() {
           </div>
         </div>
 
-        {/* Quality slider - label follows thumb so "Maximum compression" stays left, "High quality" right */}
+        {/* Quality slider: left = smaller file, right = better quality; label follows thumb */}
         <div
           className="mt-5 w-full max-w-sm space-y-2 sm:max-w-md"
           onClick={(e) => e.stopPropagation()}
         >
-          <p className="text-xs text-slate-600">Compression level</p>
+          <div>
+            <p className="text-xs font-medium text-slate-700">Compression level</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Left = smaller file · Right = better quality
+            </p>
+          </div>
           <div className="relative pt-5 pb-1">
             <span
               className="absolute text-xs font-medium text-primary whitespace-nowrap transition-all duration-150 pointer-events-none"
@@ -438,14 +443,15 @@ export default function PDFCompressor() {
               value={quality}
               onChange={(e) => setQuality(parseFloat(e.target.value))}
               className="w-full accent-primary"
+              aria-label="Compression: left = smaller file, right = better quality"
             />
           </div>
-          <div className="flex justify-between text-[11px] text-slate-400">
+          <div className="flex justify-between text-[11px] text-slate-500 font-medium">
             <span>Smaller file</span>
             <span>Better quality</span>
           </div>
           <p className="text-[11px] text-slate-400">
-            Pages are rendered as images for maximum compression. Text will not be selectable in output.
+            Pages are rendered as images; text will not be selectable in output.
           </p>
         </div>
 
