@@ -104,17 +104,21 @@ async function compressPdfCanvas(
 ): Promise<Blob> {
   onProgress(5);
 
+  // pdf.js worker can detach the ArrayBuffer; keep copies so retry still works
+  const bufferForFirst = buffer.slice(0);
+  const bufferForRetry = buffer.slice(0);
+
   // quality 0.1 → scale 0.45, jpegQ 0.18  (aggressive)
   // quality 1.0 → scale 1.3,  jpegQ 0.78  (high quality)
   const scale = 0.45 + quality * 0.85;
   const jpegQuality = 0.18 + quality * 0.6;
 
-  let result = await renderPdfToBlob(buffer, scale, jpegQuality, onProgress);
+  let result = await renderPdfToBlob(bufferForFirst, scale, jpegQuality, onProgress);
 
   // If result is still bigger than original, retry with more aggressive settings
   if (result.size >= originalSize) {
     onProgress(10);
-    result = await renderPdfToBlob(buffer, 0.45, 0.18, onProgress);
+    result = await renderPdfToBlob(bufferForRetry, 0.45, 0.18, onProgress);
   }
 
   onProgress(98);
@@ -410,24 +414,32 @@ export default function PDFCompressor() {
           </div>
         </div>
 
-        {/* Quality slider */}
+        {/* Quality slider - label follows thumb so "Maximum compression" stays left, "High quality" right */}
         <div
           className="mt-5 w-full max-w-sm space-y-2 sm:max-w-md"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between text-xs text-slate-600">
-            <span>Compression level</span>
-            <span className="font-medium text-primary">{qualityLabel}</span>
+          <p className="text-xs text-slate-600">Compression level</p>
+          <div className="relative pt-5 pb-1">
+            <span
+              className="absolute text-xs font-medium text-primary whitespace-nowrap transition-all duration-150 pointer-events-none"
+              style={{
+                left: `${quality * 100}%`,
+                transform: quality <= 0.35 ? "translateX(0)" : quality >= 0.9 ? "translateX(-100%)" : "translateX(-50%)",
+              }}
+            >
+              {qualityLabel}
+            </span>
+            <input
+              type="range"
+              min={0.1}
+              max={1}
+              step={0.05}
+              value={quality}
+              onChange={(e) => setQuality(parseFloat(e.target.value))}
+              className="w-full accent-primary"
+            />
           </div>
-          <input
-            type="range"
-            min={0.1}
-            max={1}
-            step={0.05}
-            value={quality}
-            onChange={(e) => setQuality(parseFloat(e.target.value))}
-            className="w-full accent-primary"
-          />
           <div className="flex justify-between text-[11px] text-slate-400">
             <span>Smaller file</span>
             <span>Better quality</span>
