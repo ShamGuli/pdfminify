@@ -357,15 +357,6 @@ export default function PDFCompressor() {
     [items],
   );
 
-  const qualityLabel =
-    quality <= 0.3
-      ? "Maximum compression"
-      : quality <= 0.55
-        ? "Strong compression"
-        : quality <= 0.75
-          ? "Balanced"
-          : "High quality";
-
   return (
     <div className="space-y-4">
       {/* Upload zone */}
@@ -414,7 +405,7 @@ export default function PDFCompressor() {
           </div>
         </div>
 
-        {/* Quality slider: left = smaller file, right = better quality; label follows thumb */}
+        {/* Quality slider: left = smaller file, right = better quality */}
         <div
           className="mt-5 w-full max-w-sm space-y-2 sm:max-w-md"
           onClick={(e) => e.stopPropagation()}
@@ -425,16 +416,7 @@ export default function PDFCompressor() {
               Left = smaller file · Right = better quality
             </p>
           </div>
-          <div className="relative pt-5 pb-1">
-            <span
-              className="absolute text-xs font-medium text-primary whitespace-nowrap transition-all duration-150 pointer-events-none"
-              style={{
-                left: `${quality * 100}%`,
-                transform: quality <= 0.35 ? "translateX(0)" : quality >= 0.9 ? "translateX(-100%)" : "translateX(-50%)",
-              }}
-            >
-              {qualityLabel}
-            </span>
+          <div className="pb-1">
             <input
               type="range"
               min={0.1}
@@ -450,9 +432,6 @@ export default function PDFCompressor() {
             <span>Smaller file</span>
             <span>Better quality</span>
           </div>
-          <p className="text-[11px] text-slate-400">
-            Pages are rendered as images; text will not be selectable in output.
-          </p>
         </div>
 
         {errorMessage && (
