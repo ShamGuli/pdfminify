@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
             Posts
           </h1>
           <p className="text-xs text-slate-500 sm:text-sm">
-            Manage blog posts shown on pngminify.com.
+            Manage blog posts shown on pdfminify.com.
           </p>
         </div>
         <Link

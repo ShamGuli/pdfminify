@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const SUPABASE_HOSTNAME = "esqntamdoeutxrfnwuya.supabase.co";
+const SUPABASE_HOSTNAME = "mhryztriafnzrueacpyk.supabase.co";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -14,8 +14,6 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
-    const isDev = process.env.NODE_ENV === "development";
-
     return [
       {
         source: "/(.*)",
@@ -28,21 +26,19 @@ const nextConfig: NextConfig = {
             key: "X-Frame-Options",
             value: "DENY",
           },
-          ...(isDev
-            ? []
-            : [
-                {
-                  key: "Content-Security-Policy",
-                  value: [
-                    "default-src 'self'",
-                    "script-src 'self' https://www.googletagmanager.com https://pagead2.googlesyndication.com 'unsafe-inline'",
-                    "style-src 'self' 'unsafe-inline'",
-                    `img-src 'self' data: https://${SUPABASE_HOSTNAME}`,
-                    `connect-src 'self' https://${SUPABASE_HOSTNAME} https://www.google-analytics.com`,
-                    "frame-ancestors 'none'",
-                  ].join("; "),
-                },
-              ]),
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://www.google-analytics.com blob:",
+              "style-src 'self' 'unsafe-inline'",
+              `img-src 'self' data: blob: https://${SUPABASE_HOSTNAME} https://www.google-analytics.com https://www.googletagmanager.com https://www.google.az`,
+              `connect-src 'self' https://${SUPABASE_HOSTNAME} https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com`,
+              "font-src 'self' https://fonts.gstatic.com",
+              "worker-src 'self' blob:",
+              "frame-ancestors 'none'",
+            ].join("; "),
+          },
         ],
       },
     ];

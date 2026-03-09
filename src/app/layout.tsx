@@ -89,8 +89,8 @@ export default function RootLayout({
   const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
 
   return (
-    <html lang="en">
-      <body className={`${inter.variable} antialiased bg-page text-slate-900`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} antialiased bg-page text-slate-900`} suppressHydrationWarning>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
           strategy="afterInteractive"
