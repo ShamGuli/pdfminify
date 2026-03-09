@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const SUPABASE_HOSTNAME = "mhryztriafnzrueacpyk.supabase.co";
+const SUPABASE_OLD_HOSTNAME = "esqntamdoeutxrfnwuya.supabase.co";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -10,6 +11,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: SUPABASE_HOSTNAME,
+      },
+      {
+        protocol: "https",
+        hostname: SUPABASE_OLD_HOSTNAME,
       },
     ],
   },
@@ -32,8 +37,8 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://www.google-analytics.com blob:",
               "style-src 'self' 'unsafe-inline'",
-              `img-src 'self' data: blob: https://${SUPABASE_HOSTNAME} https://www.google-analytics.com https://www.googletagmanager.com https://www.google.az`,
-              `connect-src 'self' https://${SUPABASE_HOSTNAME} https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com`,
+              `img-src 'self' data: blob: https://${SUPABASE_HOSTNAME} https://${SUPABASE_OLD_HOSTNAME} https://www.google-analytics.com https://www.googletagmanager.com https://www.google.az`,
+              `connect-src 'self' https://${SUPABASE_HOSTNAME} https://${SUPABASE_OLD_HOSTNAME} https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com`,
               "font-src 'self' https://fonts.gstatic.com",
               "worker-src 'self' blob:",
               "frame-ancestors 'none'",
