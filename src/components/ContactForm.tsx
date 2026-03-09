@@ -24,10 +24,10 @@ export default function ContactForm() {
             We&apos;ve received your note. For urgent questions, you can also
             email{" "}
             <a
-              href="mailto:hello@pngminify.com"
+              href="mailto:hello@pdfminify.com"
               className="text-primary underline-offset-2 hover:underline"
             >
-              hello@pngminify.com
+              hello@pdfminify.com
             </a>
             .
           </p>
@@ -86,10 +86,10 @@ export default function ContactForm() {
           <p className="pt-2 text-xs text-slate-500">
             Or email us directly:{" "}
             <a
-              href="mailto:hello@pngminify.com"
+              href="mailto:hello@pdfminify.com"
               className="text-primary underline-offset-2 hover:underline"
             >
-              hello@pngminify.com
+              hello@pdfminify.com
             </a>
           </p>
         </form>

@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
+import { seoVariants } from "@/lib/seo-variants";
 
 const SITE_URL = "https://pdfminify.com";
+const LAST_UPDATED = "2026-03-10T00:00:00Z";
 
 type Post = {
   slug: string;
@@ -38,27 +40,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
-      lastModified: new Date(),
+      lastModified: LAST_UPDATED,
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
       url: `${SITE_URL}/blog`,
-      lastModified: new Date(),
+      lastModified: LAST_UPDATED,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
       url: `${SITE_URL}/how-it-works`,
-      lastModified: new Date(),
+      lastModified: LAST_UPDATED,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${SITE_URL}/faq`,
-      lastModified: new Date(),
+      lastModified: LAST_UPDATED,
       changeFrequency: "monthly",
       priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/contact`,
+      lastModified: LAST_UPDATED,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/privacy`,
+      lastModified: LAST_UPDATED,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/terms`,
+      lastModified: LAST_UPDATED,
+      changeFrequency: "yearly",
+      priority: 0.3,
     },
   ];
 
@@ -66,10 +86,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((post) => post.slug)
     .map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: post.updated_at ? new Date(post.updated_at) : new Date(),
+      lastModified: post.updated_at ? new Date(post.updated_at) : LAST_UPDATED,
       changeFrequency: "monthly",
       priority: 0.6,
     }));
 
-  return [...staticRoutes, ...blogRoutes];
+  // Programmatic SEO variant pages
+  const variantRoutes: MetadataRoute.Sitemap = seoVariants.map((v) => ({
+    url: `${SITE_URL}/compress/${v.slug}`,
+    lastModified: LAST_UPDATED,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...blogRoutes, ...variantRoutes];
 }

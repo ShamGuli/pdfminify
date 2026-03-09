@@ -2,6 +2,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
 import PDFCompressorWrapper from "@/components/PDFCompressorWrapper";
+import Link from "next/link";
+import { seoVariants } from "@/lib/seo-variants";
 
 type BlogPost = {
   slug: string;
@@ -39,6 +41,11 @@ async function getLatestPosts(): Promise<BlogPost[]> {
 export default async function Home() {
   const posts = await getLatestPosts();
 
+  // Pick featured variants for internal linking
+  const featuredVariants = seoVariants
+    .filter((v) => v.category !== "general")
+    .slice(0, 12);
+
   return (
     <div className="flex min-h-screen flex-col bg-page">
       <Header />
@@ -58,103 +65,109 @@ export default async function Home() {
           />
         </section>
 
-        {/* HERO */}
-        <section className="mx-auto flex max-w-5xl flex-col gap-6 px-4 pt-8 sm:gap-8 sm:px-6 sm:pt-14 lg:pt-16">
-          <div className="max-w-2xl space-y-3 sm:space-y-4">
+        {/* ── HERO + TOOL (combined, tool-first design) ────────────────── */}
+        <section className="mx-auto max-w-5xl px-4 pt-6 sm:px-6 sm:pt-10">
+          {/* Compact hero text */}
+          <div className="mb-5 max-w-3xl space-y-2 sm:mb-6 sm:space-y-3">
             <p className="inline-flex items-center rounded-full bg-primary/5 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/10">
               Compress PDFs in your browser — no upload
             </p>
-            <h1 className="text-balance text-2xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            <h1 className="text-balance text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
               Compress PDF Files Online —{" "}
               <span className="text-primary">Free &amp; Instant</span>
             </h1>
-            <p className="text-pretty text-sm leading-relaxed text-slate-600 sm:text-base">
+            <p className="text-pretty text-sm leading-relaxed text-slate-600">
               Reduce PDF file size up to 80% without losing quality. No signup.
               No upload to server. Everything happens securely in your browser.
             </p>
-          </div>
-
-          <div className="flex flex-wrap gap-2 text-xs sm:gap-3 sm:text-sm">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200 sm:gap-2 sm:py-1">
-              <span aria-hidden>🔒</span> 100% Private
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200 sm:gap-2 sm:py-1">
-              <span aria-hidden>⚡</span> Instant
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200 sm:gap-2 sm:py-1">
-              <span aria-hidden>✅</span> Free Forever
-            </span>
-          </div>
-        </section>
-
-        {/* COMPRESSOR */}
-        <section className="mx-auto mt-6 max-w-5xl px-4 pb-10 sm:mt-8 sm:px-6 sm:pb-14 lg:pb-16">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-8">
-            <PDFCompressorWrapper />
-
-            <div className="space-y-4 text-sm text-slate-600">
-              <div className="rounded-xl bg-white p-4 shadow-sm shadow-slate-100">
-                <h2 className="mb-1 text-sm font-semibold text-slate-900">
-                  Why PDF Minify?
-                </h2>
-                <ul className="space-y-1.5">
-                  <li>• Up to 80% smaller PDF files</li>
-                  <li>• No uploads — everything stays on your device</li>
-                  <li>• Perfect for email, sharing, and archiving</li>
-                </ul>
-              </div>
-              <div className="rounded-xl bg-slate-50 p-4 text-xs text-slate-500">
-                <p className="mb-1 font-medium text-slate-700">
-                  Tip for best results:
-                </p>
-                <p>
-                  PDFs with embedded images (screenshots, scans, presentations)
-                  usually compress the most. Text-only PDFs are often already
-                  optimized.
-                </p>
-              </div>
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200">
+                <span aria-hidden>🔒</span> 100% Private
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200">
+                <span aria-hidden>⚡</span> Instant
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-slate-700 shadow-sm shadow-slate-100 ring-1 ring-slate-200">
+                <span aria-hidden>✅</span> Free Forever
+              </span>
             </div>
           </div>
 
-          {/* Rectangle ad under compressor */}
-          <div className="mt-8 flex justify-center">
-            <AdBanner
-              className="w-full max-w-sm"
-              slot="2222222222"
-              style={{ display: "block", width: "100%", height: 280 }}
-            />
+          {/* TOOL — full width, prominent */}
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-lg shadow-slate-200/50 backdrop-blur-sm sm:p-6">
+            <PDFCompressorWrapper />
+          </div>
+
+          {/* Quick info bar under tool */}
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="flex items-start gap-3 rounded-xl bg-white p-3 shadow-sm shadow-slate-100 ring-1 ring-slate-100">
+              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-sm">🛡️</span>
+              <div>
+                <p className="text-xs font-semibold text-slate-900">100% Browser-Side</p>
+                <p className="text-[11px] text-slate-500">Files never leave your device</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 rounded-xl bg-white p-3 shadow-sm shadow-slate-100 ring-1 ring-slate-100">
+              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-sm">📦</span>
+              <div>
+                <p className="text-xs font-semibold text-slate-900">Batch Processing</p>
+                <p className="text-[11px] text-slate-500">Up to 20 files, 50 MB each</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 rounded-xl bg-white p-3 shadow-sm shadow-slate-100 ring-1 ring-slate-100">
+              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-sm">💎</span>
+              <div>
+                <p className="text-xs font-semibold text-slate-900">No Watermark</p>
+                <p className="text-[11px] text-slate-500">Clean output, no branding added</p>
+              </div>
+            </div>
           </div>
         </section>
 
+        {/* Rectangle ad under compressor */}
+        <div className="mx-auto mt-8 flex max-w-5xl justify-center px-4 sm:px-6">
+          <AdBanner
+            className="w-full max-w-sm"
+            slot="2222222222"
+            style={{ display: "block", width: "100%", height: 280 }}
+          />
+        </div>
+
         {/* HOW IT WORKS */}
-        <section className="mx-auto max-w-5xl px-4 pb-10 sm:px-6 sm:pb-14">
-              <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <section className="mx-auto mt-10 max-w-5xl px-4 pb-10 sm:px-6 sm:pb-14">
+          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="text-xl font-semibold text-slate-900 sm:text-2xl">
               How it works
             </h2>
             <p className="text-xs text-slate-500 sm:text-sm">
-                  Three simple steps to smaller PDFs.
+              Three simple steps to smaller PDFs.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             {[
               {
-                title: "1. Upload",
-                  desc: "Drag & drop your PDF files or browse from your device. We only accept PDF — no images or other file types.",
+                num: "1",
+                title: "Upload",
+                desc: "Drag & drop your PDF files or browse from your device. We only accept PDF — no images or other file types.",
               },
               {
-                title: "2. Compress",
-                  desc: "PDF Minify optimizes your documents entirely in the browser. No files are ever uploaded to a server.",
+                num: "2",
+                title: "Compress",
+                desc: "PDF Minify optimizes your documents entirely in the browser. No files are ever uploaded to a server.",
               },
               {
-                title: "3. Download",
-                  desc: "Download individual compressed PDFs or all at once as a ZIP archive, ready to share or upload.",
+                num: "3",
+                title: "Download",
+                desc: "Download individual compressed PDFs or all at once as a ZIP archive, ready to share or upload.",
               },
             ].map((step) => (
               <div
-                key={step.title}
+                key={step.num}
                 className="rounded-xl bg-white p-4 shadow-sm shadow-slate-100"
               >
+                <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
+                  {step.num}
+                </div>
                 <h3 className="mb-1 text-sm font-semibold text-slate-900">
                   {step.title}
                 </h3>
@@ -187,7 +200,7 @@ export default async function Home() {
               },
               {
                 title: "Practical size limits",
-                desc: "Each PDF can be up to 50 MB — large enough for most reports, e‑books, and presentations.",
+                desc: "Each PDF can be up to 50 MB — large enough for most reports, e-books, and presentations.",
               },
               {
                 title: "Free forever",
@@ -213,45 +226,30 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Related tools */}
-        <section className="mx-auto max-w-5xl px-4 pb-6 sm:px-6 sm:pb-10">
-          <div className="rounded-2xl bg-white p-4 text-xs text-slate-600 shadow-sm shadow-slate-100 sm:text-sm">
-            <h2 className="mb-2 text-sm font-semibold text-slate-900">
-              Related tools
-            </h2>
-            <p>
-              Also try{" "}
-              <a
-                href="https://pngminify.com"
-                className="text-primary underline-offset-2 hover:underline"
+        {/* POPULAR USE CASES — Programmatic SEO internal linking */}
+        <section className="mx-auto max-w-5xl px-4 pb-10 sm:px-6 sm:pb-14">
+          <h2 className="mb-5 text-xl font-semibold text-slate-900 sm:text-2xl">
+            Popular compression use cases
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {featuredVariants.map((v) => (
+              <Link
+                key={v.slug}
+                href={`/compress/${v.slug}`}
+                className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-primary/40 hover:text-primary sm:text-sm"
               >
-                pngminify.com
-              </a>
-              ,{" "}
-              <a
-                href="https://miniwebp.com"
-                className="text-primary underline-offset-2 hover:underline"
-              >
-                miniwebp.com
-              </a>
-              ,{" "}
-              <a
-                href="https://miniheic.com"
-                className="text-primary underline-offset-2 hover:underline"
-              >
-                miniheic.com
-              </a>{" "}
-              and{" "}
-              <a
-                href="https://mp3mini.com"
-                className="text-primary underline-offset-2 hover:underline"
-              >
-                mp3mini.com
-              </a>{" "}
-              for image and audio compression.
-            </p>
+                {v.h1Short}
+              </Link>
+            ))}
+            <Link
+              href="/compress"
+              className="rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1.5 text-xs font-medium text-primary transition hover:bg-primary/10 sm:text-sm"
+            >
+              View all use cases →
+            </Link>
           </div>
         </section>
+
 
         {/* FAQ */}
         <section className="mx-auto max-w-5xl px-4 pb-10 sm:px-6 sm:pb-14">
@@ -293,66 +291,13 @@ export default async function Home() {
                   <span className="text-sm font-medium text-slate-900">
                     {item.q}
                   </span>
-                  <span className="text-xs text-slate-500 group-open:hidden">
-                    +
-                  </span>
-                  <span className="hidden text-xs text-slate-500 group-open:inline">
-                    −
-                  </span>
+                  <span className="text-xs text-slate-500 group-open:hidden">+</span>
+                  <span className="hidden text-xs text-slate-500 group-open:inline">−</span>
                 </summary>
                 <p className="mt-2 text-xs text-slate-600 sm:text-sm">
                   {item.a}
                 </p>
               </details>
-            ))}
-          </div>
-        </section>
-
-        {/* RELATED TOOLS */}
-        <section className="mx-auto max-w-5xl px-4 pb-10 sm:px-6 sm:pb-14">
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <h2 className="text-xl font-semibold text-slate-900 sm:text-2xl">
-              Related tools
-            </h2>
-            <p className="text-xs text-slate-500 sm:text-sm">
-              Coming soon — a full suite of minify tools.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                name: "miniwebp.com",
-                desc: "Compress WEBP images for ultra-light web assets.",
-              },
-              {
-                name: "miniheic.com",
-                desc: "Convert and compress HEIC photos from iOS devices.",
-              },
-              {
-                name: "mp3mini.com",
-                desc: "Reduce MP3 file size for podcasts and audio files.",
-              },
-              {
-                name: "pdfminify.com",
-                desc: "Shrink large PDF documents for faster sharing.",
-              },
-            ].map((tool) => (
-              <div
-                key={tool.name}
-                className="flex flex-col justify-between rounded-xl bg-white p-4 text-sm text-slate-600 shadow-sm shadow-slate-100"
-              >
-                <div>
-                  <h3 className="mb-1 text-sm font-semibold text-slate-900">
-                    {tool.name}
-                  </h3>
-                  <p className="text-xs text-slate-600 sm:text-sm">
-                    {tool.desc}
-                  </p>
-                </div>
-                <p className="mt-3 text-[11px] text-slate-400">
-                  Placeholder — not yet available.
-                </p>
-              </div>
             ))}
           </div>
         </section>
@@ -373,7 +318,7 @@ export default async function Home() {
 
           {posts.length === 0 ? (
             <p className="text-sm text-slate-500">
-              Blog posts are coming soon. Check back for PNG optimization tips
+              Blog posts are coming soon. Check back for PDF compression tips
               and best practices.
             </p>
           ) : (

@@ -19,9 +19,24 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: siteTitle,
   description: siteDescription,
+  keywords: [
+    "compress pdf", "pdf compressor", "reduce pdf size", "shrink pdf",
+    "pdf compressor online", "compress pdf free", "pdf file size reducer",
+    "compress pdf without losing quality", "pdf minify", "free pdf compressor",
+    "reduce pdf file size", "pdf size reducer online", "compress pdf for email",
+  ],
+  authors: [{ name: "PDF Minify", url: siteUrl }],
+  creator: "PDF Minify",
+  publisher: "PDF Minify",
   icons: {
-    icon: "/favicon.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
+  manifest: "/site.webmanifest",
   openGraph: {
     title: siteTitle,
     description: siteDescription,
@@ -42,9 +57,22 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@pdfminify",
+    creator: "@pdfminify",
     title: siteTitle,
     description: siteDescription,
     images: ["/og.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large" as const,
+      "max-snippet": -1,
+    },
   },
 };
 

@@ -1,0 +1,13 @@
+{
+  "name": "PDF Minify",
+  "short_name": "PDFMinify",
+  "description": "Compress PDF files online for free. No upload to server.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#E53E3E",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
