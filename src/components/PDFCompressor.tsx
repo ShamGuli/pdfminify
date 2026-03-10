@@ -469,31 +469,29 @@ export default function PDFCompressor() {
 
           {/* RIGHT — results panel */}
           <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-100 sm:p-5" style={{ minWidth: 0 }}>
-            {/* Header */}
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <p className="text-sm font-medium text-slate-800">
-                  Files ({items.length})
-                </p>
-                {/* Compression slider in results header */}
-                <div
-                  className="flex items-center gap-2 text-xs text-slate-500"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <span className="hidden sm:inline">Compression:</span>
-                  <input
-                    type="range"
-                    min={0.1}
-                    max={0.9}
-                    step={0.05}
-                    value={compression}
-                    onChange={(e) => setCompression(parseFloat(e.target.value))}
-                    className="w-20 accent-primary"
-                  />
-                  <span className="font-medium text-primary">{Math.round(compression * 100)}%</span>
-                </div>
+            {/* Header — single row */}
+            <div className="flex items-center gap-3">
+              <p className="shrink-0 text-sm font-medium text-slate-800">
+                Files ({items.length})
+              </p>
+              {/* Compression slider */}
+              <div
+                className="flex items-center gap-2 text-xs text-slate-500"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span className="hidden sm:inline">Compression:</span>
+                <input
+                  type="range"
+                  min={0.1}
+                  max={0.9}
+                  step={0.05}
+                  value={compression}
+                  onChange={(e) => setCompression(parseFloat(e.target.value))}
+                  className="w-20 accent-primary"
+                />
+                <span className="font-medium text-primary">{Math.round(compression * 100)}%</span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="ml-auto flex shrink-0 items-center gap-2">
                 <button
                   type="button"
                   onClick={handleDownloadAll}

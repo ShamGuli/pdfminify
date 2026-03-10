@@ -69,9 +69,6 @@ export default async function Home() {
         <section className="mx-auto max-w-5xl px-4 pt-6 sm:px-6 sm:pt-10">
           {/* Compact hero text */}
           <div className="mb-5 max-w-3xl space-y-2 sm:mb-6 sm:space-y-3">
-            <p className="inline-flex items-center rounded-full bg-primary/5 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/10">
-              Compress PDFs in your browser — no upload
-            </p>
             <h1 className="text-balance text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
               Compress PDF Files Online —{" "}
               <span className="text-primary">Free &amp; Instant</span>
