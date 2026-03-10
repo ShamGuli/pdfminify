@@ -4,7 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // /admin/login həmişə açıq qalsın
+  // /admin/login is always public
   if (pathname === "/admin/login") {
     return NextResponse.next();
   }
@@ -12,14 +12,13 @@ export async function middleware(req: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // Env yoxdursa — login-ə yönləndir (keçid vermə!)
   if (!url || !anonKey) {
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = "/admin/login";
     return NextResponse.redirect(loginUrl);
   }
 
-  const res = NextResponse.next();
+  let res = NextResponse.next({ request: req });
 
   const supabase = createServerClient(url, anonKey, {
     cookies: {
@@ -27,14 +26,21 @@ export async function middleware(req: NextRequest) {
         return req.cookies.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => {
-          res.cookies.set(name, value, options);
-        });
+        // Update request cookies so downstream middleware/routes see fresh tokens
+        cookiesToSet.forEach(({ name, value }) =>
+          req.cookies.set(name, value),
+        );
+        // Recreate response to carry updated request cookies
+        res = NextResponse.next({ request: req });
+        // Set cookies on the response so the browser stores them
+        cookiesToSet.forEach(({ name, value, options }) =>
+          res.cookies.set(name, value, options),
+        );
       },
     },
   });
 
-  // getUser() — getSession()-dən daha etibarlı (server-side token doğrulaması edir)
+  // getUser() validates JWT with Supabase server
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -43,13 +49,17 @@ export async function middleware(req: NextRequest) {
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = "/admin/login";
     loginUrl.searchParams.set("redirectTo", pathname);
-    return NextResponse.redirect(loginUrl);
+    const redirectRes = NextResponse.redirect(loginUrl);
+    // Copy any refreshed auth cookies to the redirect response
+    res.cookies.getAll().forEach((cookie) => {
+      redirectRes.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectRes;
   }
 
   return res;
 }
 
 export const config = {
-  // /admin özünü + bütün alt route-ları tutur
   matcher: ["/admin", "/admin/:path*"],
 };
