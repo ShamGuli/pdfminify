@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "PDF Minify FAQ — Frequently Asked Questions",
+  title: "FAQ — PDF Minify Free Online PDF Compressor",
   description:
-    "Answers to common questions about PDF Minify: pricing, privacy, limits, and how PDF compression works.",
+    "Answers to common questions about PDF Minify: pricing, privacy, file size limits, compression quality, and how browser-based PDF compression works.",
 };
 
 const faqs = [

@@ -4,9 +4,9 @@ import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact — PDF Minify",
+  title: "Contact PDF Minify — Get in Touch",
   description:
-    "Get in touch with the PDF Minify team. Ask questions, send feedback, or suggest new features.",
+    "Contact the PDF Minify team. Questions, feedback, bug reports, or feature requests — email us at hello@pdfminify.com. We respond within 24-48 hours.",
 };
 
 export default function ContactPage() {

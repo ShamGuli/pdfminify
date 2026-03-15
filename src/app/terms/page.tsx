@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — PDF Minify",
+  title: "Terms of Service | PDF Minify",
   description:
-    "Terms of Service for using PDF Minify, a free browser-based PDF compression tool.",
+    "Terms of Service for PDF Minify, a free browser-based PDF compression tool. No warranties, use at your own discretion, keep backups of original files.",
 };
 
 export default function TermsPage() {

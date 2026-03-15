@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "How PDF Minify Works — Browser-side PDF Compression",
+  title: "How PDF Compression Works — Browser-Based & Private | PDF Minify",
   description:
-    "Understand how PDF Minify compresses documents directly in your browser in three simple steps: upload, compress, download.",
+    "Learn how PDF Minify compresses documents directly in your browser in three simple steps. No server upload, 100% private, works on any device.",
 };
 
 export default function HowItWorksPage() {

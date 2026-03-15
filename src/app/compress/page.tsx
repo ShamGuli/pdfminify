@@ -5,9 +5,9 @@ import Link from "next/link";
 import { variantCategories } from "@/lib/seo-variants";
 
 export const metadata: Metadata = {
-  title: "PDF Compression Use Cases — Compress PDF for Any Situation",
+  title: "PDF Compression Use Cases — Compress for Any Situation | PDF Minify",
   description:
-    "Browse 200+ PDF compression use cases: compress for email, reduce to specific sizes, optimize for platforms and industries. Free online tool.",
+    "Browse 90+ PDF compression use cases: compress for email, reduce to specific sizes, optimize for platforms and industries. Free browser-based tool.",
   alternates: { canonical: "https://pdfminify.com/compress" },
 };
 

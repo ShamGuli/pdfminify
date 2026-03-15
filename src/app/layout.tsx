@@ -10,9 +10,9 @@ const inter = Inter({
   display: "swap",
 });
 
-const siteTitle = "Free PDF Compressor Online — Reduce PDF Size | PDF Minify";
+const siteTitle = "Free PDF Compressor Online — Reduce PDF Size Instantly | PDF Minify";
 const siteDescription =
-  "Compress PDF files online for free. Reduce file size up to 80% without losing quality. No upload to server — 100% private.";
+  "Compress PDF files online for free. Reduce file size up to 80% without losing quality. No signup, no upload to server — 100% private, browser-based compression.";
 const siteUrl = "https://pdfminify.com";
 
 export const metadata: Metadata = {

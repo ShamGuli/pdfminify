@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { seoVariants } from "@/lib/seo-variants";
 
 const SITE_URL = "https://pdfminify.com";
-const LAST_UPDATED = "2026-03-10T00:00:00Z";
+const LAST_UPDATED = "2026-03-15T00:00:00Z";
 
 type Post = {
   slug: string;
@@ -45,6 +45,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
+      url: `${SITE_URL}/compress`,
+      lastModified: LAST_UPDATED,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: `${SITE_URL}/blog`,
       lastModified: LAST_UPDATED,
       changeFrequency: "weekly",
@@ -61,6 +67,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: LAST_UPDATED,
       changeFrequency: "monthly",
       priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/about`,
+      lastModified: LAST_UPDATED,
+      changeFrequency: "yearly",
+      priority: 0.5,
     },
     {
       url: `${SITE_URL}/contact`,

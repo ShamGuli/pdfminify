@@ -54,24 +54,22 @@ function buildSchemas(variant: (typeof seoVariants)[number]) {
     name: variant.h1,
     description: variant.description,
     url,
-    isPartOf: {
-      "@type": "WebSite",
-      name: "PDF Minify",
-      url: "https://pdfminify.com",
-    },
+    isPartOf: { "@id": "https://pdfminify.com/#website" },
+    about: { "@id": "https://pdfminify.com/#app" },
   };
 
   const howTo = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: variant.h1,
+    name: `How to ${variant.h1}`,
     description: variant.intro,
+    totalTime: "PT1M",
     step: [
       {
         "@type": "HowToStep",
         position: 1,
         name: "Upload your PDF",
-        text: "Drag & drop your PDF file or click to browse. Files up to 50 MB are supported.",
+        text: "Drag and drop your PDF file or click to browse from your device. You can upload up to 20 PDF files at once, each up to 50 MB in size.",
       },
       {
         "@type": "HowToStep",
@@ -83,7 +81,7 @@ function buildSchemas(variant: (typeof seoVariants)[number]) {
         "@type": "HowToStep",
         position: 3,
         name: "Download compressed PDF",
-        text: "Download the compressed file or all files as a ZIP archive.",
+        text: "Download the compressed file individually or all files as a convenient ZIP archive. Files are ready to email, upload, or share immediately.",
       },
     ],
   };

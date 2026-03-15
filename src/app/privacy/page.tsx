@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — PDF Minify",
+  title: "Privacy Policy | PDF Minify",
   description:
-    "Learn how PDF Minify handles your data. All PDF compression runs entirely in your browser — no uploads, no tracking.",
+    "PDF Minify privacy policy. All PDF compression runs entirely in your browser — no file uploads, no tracking, no data collection. Your documents never leave your device.",
 };
 
 export default function PrivacyPage() {

@@ -9,9 +9,9 @@ import AdBanner from "@/components/AdBanner";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "PDF Minify Blog — Tips for Smaller, Lighter PDF Files",
+  title: "PDF Compression Blog — Tips, Guides & Best Practices | PDF Minify",
   description:
-    "Learn how to optimize PDF documents for the web. Guides on compression, performance, best practices, and document workflows.",
+    "Practical articles about PDF compression, file size optimization, and document workflows. Learn how to reduce PDF size for email, web, and more.",
   openGraph: {
     title: "PDF Minify Blog — PDF Optimization Guides",
     description:
