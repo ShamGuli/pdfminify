@@ -194,7 +194,7 @@ export default async function BlogPostPage({
           <img
             src={post.cover_image}
             alt={post.title}
-            className="mb-8 h-56 w-full rounded-xl object-cover sm:h-72"
+            className="mb-8 w-full rounded-xl object-contain"
           />
         )}
 

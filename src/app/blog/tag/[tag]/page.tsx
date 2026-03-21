@@ -77,7 +77,7 @@ export default async function TagPage({ params }: { params: Params }) {
                   <img
                     src={post.cover_image}
                     alt={post.title}
-                    className="h-36 w-full object-cover"
+                    className="aspect-video w-full object-cover"
                     loading="lazy"
                   />
                 )}
