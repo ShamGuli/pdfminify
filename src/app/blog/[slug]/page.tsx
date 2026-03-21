@@ -189,14 +189,12 @@ export default async function BlogPostPage({
           )}
         </header>
 
-        {post.cover_image && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={post.cover_image}
-            alt={post.title}
-            className="mb-8 w-full rounded-xl object-contain"
-          />
-        )}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={post.cover_image || "/og.png"}
+          alt={post.title}
+          className="mb-8 w-full rounded-xl object-contain"
+        />
 
         {post.tags && post.tags.length > 0 && (
           <div className="mb-6 flex flex-wrap gap-2">
