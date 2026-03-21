@@ -27,7 +27,7 @@ async function getLatestPosts(): Promise<BlogPost[]> {
           apikey: supabaseKey,
           Authorization: `Bearer ${supabaseKey}`,
         },
-        next: { revalidate: 300 },
+        next: { revalidate: 60 },
       },
     );
 
@@ -326,15 +326,13 @@ export default async function Home() {
                   href={`/blog/${post.slug}`}
                   className="flex flex-col overflow-hidden rounded-xl bg-white text-sm text-slate-700 shadow-sm shadow-slate-100 transition hover:-translate-y-0.5 hover:shadow-md"
                 >
-                  {post.cover_image && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={post.cover_image}
-                      alt={post.title}
-                      className="h-36 w-full object-cover"
-                      loading="lazy"
-                    />
-                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={post.cover_image || "/og.png"}
+                    alt={post.title}
+                    className="aspect-video w-full object-cover"
+                    loading="lazy"
+                  />
                   <div className="flex flex-1 flex-col justify-between p-4">
                     <div>
                       <h3 className="mb-1 line-clamp-2 text-sm font-semibold text-slate-900">
